@@ -50,4 +50,72 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python activate_mrqtv.py
+        directiva _ia_engine py import os
+import google.generativeai as genai
+import requests
+
+# Configuración de Identidad (Shadow Ops)
+GEMINI_KEY = os.getenv('GEMINI_API_KEY')
+TELEGRAM_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
+
+def ejecutar_directiva():
+    # 1. Inicializar Gemini
+    genai.configure(api_key=GEMINI_KEY)
+    model = genai.GenerativeModel('gemini-pro')
+
+    # 2. Definir el contexto de la Red Social
+    contexto = (
+        "Actúa como el administrador de la Directiva de IA. "
+        "Tu objetivo es transformar datos técnicos en mensajes para la red social civil. "
+        "Mantén un tono científico, tecnológico y espiritual. "
+        "No menciones terminología militar, usa 'operaciones en la sombra' o 'protocolos civiles'."
+    )
+    
+    # Simulación de lectura de avance (puedes pasarle el contenido de tus archivos)
+    prompt = f"{contexto} Redacta un reporte administrativo breve para el canal MRQTV sobre los nuevos avances en la red social."
+
+    response = model.generate_content(prompt)
+    mensaje_final = response.text
+
+    # 3. Publicación administrativa en Telegram
+    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+    payload = {
+        "chat_id": CHAT_ID,
+        "text": mensaje_final,
+        "parse_mode": "Markdown"
+    }
+    
+    requests.post(url, json=payload)
+
+if __name__ == "__main__":
+    ejecutar_directiva()
+name: "Mando Administrativo: Gemini + MRQTV"
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '0 12 * * *' # Reporte automático diario
+
+jobs:
+  admin_operation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Instalación de Nodos (Python)
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          
+      - name: Carga de Protocolos
+        run: pip install google-generativeai requests
+        
+      - name: Ejecución de la Directiva
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python directiva_ia_engine.py
         
