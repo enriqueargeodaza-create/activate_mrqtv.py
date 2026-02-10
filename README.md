@@ -28,4 +28,26 @@ def send_activation():
 
 if __name__ == "__main__":
     send_activation()
-    
+    name: "Activación MRQTV"
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  activation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - name: Instalar Dependencias
+        run: pip install requests
+      - name: Ejecutar Protocolo de Activación
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python activate_mrqtv.py
+        
