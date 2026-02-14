@@ -118,4 +118,23 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python directiva_ia_engine.py
+        import os
+from groq import Groq
+
+# El sistema extrae el secreto de las variables de entorno de GitHub
+api_key = os.environ.get("GROQ_API_KEY")
+
+if not api_key:
+    print("ERROR: La llave no se detecta en el entorno.")
+else:
+    client = Groq(api_key=api_key)
+    try:
+        # Prueba de baja latencia (Llama 3 o similar)
+        completion = client.chat.completions.create(
+            model="llama3-8b-8192",
+            messages=[{"role": "user", "content": "Sistema Activo"}]
+        )
+        print("CONEXIÓN EXITOSA: La IA de Groq está integrada.")
+    except Exception as e:
+        print(f"FALLO DE CONEXIÓN: {e}")
         
